@@ -45,8 +45,7 @@ typedef uint64_t pd_BlockNumber_t;
             return err;                 \
     }
 
-// TODO: change this after release with assets
-enum EqCurrency {
+enum EqAsset {
     Unknown = 0,
     Usd = 1,
     Eq = 2,
@@ -55,10 +54,10 @@ enum EqCurrency {
     Eos = 5,
     Dot = 6,
     Crv = 7,
-    CURRENCY_MAX
+    Gens = 8
 };
 
-typedef enum EqCurrency eq_Currency_t;
+typedef enum EqAsset eq_Asset_t;
 
 /// Types of subaccounts. Every master account can have
 /// only one subaccount of each type

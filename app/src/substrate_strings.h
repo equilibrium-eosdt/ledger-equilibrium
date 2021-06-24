@@ -203,7 +203,7 @@ static const char* STR_IT_memo = "Memo";
 static const char* STR_IT_message = "Message";
 static const char* STR_IT_assets = "Assets";
 static const char* STR_IT_dest_weight = "Dest weight";
-static const char* STR_IT_currency = "Currency";
+static const char* STR_IT_asset = "Asset";
 static const char* STR_IT_subaccount = "Subaccount";
 #ifdef __cplusplus
 }

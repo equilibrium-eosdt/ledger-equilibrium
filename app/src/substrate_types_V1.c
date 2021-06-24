@@ -23,25 +23,27 @@
 #include <stdint.h>
 #include <zxmacros.h>
 
-static const char* CURRENCY_USD = "USD";
-static const char* CURRENCY_EQ  = "EQ" ;
-static const char* CURRENCY_ETH = "ETH";
-static const char* CURRENCY_BTC = "BTC";
-static const char* CURRENCY_EOS = "EOS";
-static const char* CURRENCY_DOT = "DOT";
-static const char* CURRENCY_CRV = "CRV";
-static const char* CURRENCY_ERR = "ERROR";
+static const char* ASSET_USD = "USD";
+static const char* ASSET_EQ  = "EQ" ;
+static const char* ASSET_ETH = "ETH";
+static const char* ASSET_BTC = "BTC";
+static const char* ASSET_EOS = "EOS";
+static const char* ASSET_DOT = "DOT";
+static const char* ASSET_CRV = "CRV";
+static const char* ASSET_GENS = "GENS";
+static const char* ASSET_ERR = "ERROR";
 
-const char* to_string_currency(eq_Currency_t c){
+const char* to_string_asset(eq_Asset_t c){
     switch (c){
-        case Usd: return CURRENCY_USD;
-        case Eq: return CURRENCY_EQ;
-        case Eth: return CURRENCY_ETH;
-        case Btc: return CURRENCY_BTC;
-        case Eos: return CURRENCY_EOS;
-        case Dot: return CURRENCY_DOT;
-        case Crv: return CURRENCY_CRV;
-        default: return CURRENCY_ERR;
+        case Usd: return ASSET_USD;
+        case Eq:  return ASSET_EQ;
+        case Eth: return ASSET_ETH;
+        case Btc: return ASSET_BTC;
+        case Eos: return ASSET_EOS;
+        case Dot: return ASSET_DOT;
+        case Crv: return ASSET_CRV;
+        case Gens: return ASSET_GENS;
+        default:  return ASSET_ERR;
     }
 }
 
@@ -2183,9 +2185,9 @@ parser_error_t _toStringOptionTupleBalanceOfBalanceOfBlockNumber_V1(
 
 
 
-parser_error_t _toStringBalanceCurrency_V1(
+parser_error_t _toStringBalanceAsset_V1(
         const pd_Balance_t* v,
-        const eq_Currency_t* c,
+        const eq_Asset_t* c,
         char* outValue,
         uint16_t outValueLen,
         uint8_t pageIdx,
@@ -2212,11 +2214,11 @@ parser_error_t _toStringBalanceCurrency_V1(
     }
 
     number_inplace_trimming(bufferUI, 1);
-    size_t token_name_size = strlen(to_string_currency(*c));
+    size_t token_name_size = strlen(to_string_asset(*c));
     size_t size = strlen(bufferUI) + token_name_size + 2;
     char _tmpBuffer[200];
     MEMZERO(_tmpBuffer, sizeof(_tmpBuffer));
-    parser_error_t err = _toStringCurrency(c, _tmpBuffer, 10);
+    parser_error_t err = _toStringAsset(c, _tmpBuffer, 10);
     if (err != parser_ok){
         return err;
     }
@@ -2231,8 +2233,8 @@ parser_error_t _toStringBalanceCurrency_V1(
     return parser_ok;
 }
 
-parser_error_t _toStringCurrency_V1(
-        const eq_Currency_t* v,
+parser_error_t _toStringAsset_V1(
+        const eq_Asset_t* v,
         char* outValue,
         uint16_t outValueLen,
         uint8_t pageIdx,
@@ -2241,11 +2243,11 @@ parser_error_t _toStringCurrency_V1(
     CLEAN_AND_CHECK()
     *pageCount = 1;
 
-    return _toStringCurrency(v, outValue, outValueLen);
+    return _toStringAsset(v, outValue, outValueLen);
 }
 
-parser_error_t _toStringCurrency(
-        const eq_Currency_t* v,
+parser_error_t _toStringAsset(
+        const eq_Asset_t* v,
         char* outValue,
         uint16_t outValueLen)
 {
@@ -2254,28 +2256,31 @@ parser_error_t _toStringCurrency(
     }
     switch (*v) {
         case Usd:
-            snprintf(outValue, outValueLen, "USD");
+            snprintf(outValue, outValueLen, "%s", ASSET_USD);
             break;
         case Eq:
-            snprintf(outValue, outValueLen, "EQ");
+            snprintf(outValue, outValueLen, "%s", ASSET_EQ);
             break;
         case Eth:
-            snprintf(outValue, outValueLen, "ETH");
+            snprintf(outValue, outValueLen, "%s", ASSET_ETH);
             break;
         case Btc:
-            snprintf(outValue, outValueLen, "BTC");
+            snprintf(outValue, outValueLen, "%s", ASSET_BTC);
             break;
         case Eos:
-            snprintf(outValue, outValueLen, "EOS");
+            snprintf(outValue, outValueLen, "%s", ASSET_EOS);
             break;
         case Dot:
-            snprintf(outValue, outValueLen, "DOT");
+            snprintf(outValue, outValueLen, "%s", ASSET_DOT);
             break;
         case Crv:
-            snprintf(outValue, outValueLen, "CRV");
+            snprintf(outValue, outValueLen, "%s", ASSET_CRV);
+            break;
+        case Gens:
+            snprintf(outValue, outValueLen, "%s", ASSET_GENS);
             break;
         default:
-            return parser_currency_not_supported;
+            return parser_asset_not_supported;
     }
     return parser_ok;
 }

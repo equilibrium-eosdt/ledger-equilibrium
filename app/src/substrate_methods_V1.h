@@ -34,7 +34,7 @@ extern "C" {
 /// Pallet EqBalances
 #define PD_CALL_EQBALANCES_TRANSFER_V1 0
 typedef struct {
-    eq_Currency_t currency;
+    eq_Asset_t asset;
     pd_AccountId_V1_t to;
     pd_Balance_t amount;
 } pd_eqbalances_transfer_V1_t;
@@ -48,14 +48,14 @@ typedef struct {
 #define PD_CALL_SUBACCOUNTS_TRANSFER_TO_SUBACCOUNT_V1 0
 typedef struct {
     eq_Subaccount_t subAccType;
-    eq_Currency_t currency;
+    eq_Asset_t asset;
     pd_Balance_t amount;
 } pd_subaccounts_transfer_to_subaccount_V1_t;
 
 #define PD_CALL_SUBACCOUNTS_TRANSFER_FROM_SUBACCOUNT_V1 1
 typedef struct {
     eq_Subaccount_t subAccType;
-    eq_Currency_t currency;
+    eq_Asset_t asset;
     pd_Balance_t amount;
 } pd_subaccounts_transfer_from_subaccount_V1_t;
 

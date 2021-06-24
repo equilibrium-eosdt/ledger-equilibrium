@@ -46,7 +46,7 @@ void extractHDPath(uint32_t rx, uint32_t offset) {
         THROW(APDU_CODE_DATA_INVALID);
     }
 
-    hdPath[1] = get_network_derivation_path(app_mode_network()); // TODO: CHECK THIS
+    hdPath[1] = get_network_derivation_path(app_mode_network());
 
 #ifdef APP_SECRET_MODE_ENABLED
     if (app_mode_secret()) {

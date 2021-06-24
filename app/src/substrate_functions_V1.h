@@ -758,15 +758,15 @@ parser_error_t _toStringu8_array_32_V1(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringCurrency_V1(
-        const eq_Currency_t* v,
+parser_error_t _toStringAsset_V1(
+        const eq_Asset_t* v,
         char* outValue,
         uint16_t outValueLen,
         uint8_t pageIdx,
         uint8_t* pageCount);
 
-parser_error_t _toStringCurrency(
-        const eq_Currency_t* v,
+parser_error_t _toStringAsset(
+        const eq_Asset_t* v,
         char* outValue,
         uint16_t outValueLen);
 

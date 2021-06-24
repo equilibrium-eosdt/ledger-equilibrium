@@ -23,7 +23,7 @@
 __Z_INLINE parser_error_t _readMethod_eqbalances_transfer_V1(
     parser_context_t* c, pd_eqbalances_transfer_V1_t* m)
 {
-    CHECK_ERROR(_readCurrency(c, &m->currency));
+    CHECK_ERROR(_readAsset(c, &m->asset));
     CHECK_ERROR(_readAccountId_V1(c, &m->to));
     CHECK_ERROR(_readBalance(c, &m->amount))
     return parser_ok;
@@ -41,7 +41,7 @@ __Z_INLINE parser_error_t _readMethod_subaccounts_transfer_to_subaccount_V1(
     parser_context_t* c, pd_subaccounts_transfer_to_subaccount_V1_t* m)
 {
     CHECK_ERROR(_readSubAccount_V1(c, &m->subAccType));
-    CHECK_ERROR(_readCurrency(c, &m->currency));
+    CHECK_ERROR(_readAsset(c, &m->asset));
     CHECK_ERROR(_readBalance(c, &m->amount))
     return parser_ok;
 }
@@ -50,7 +50,7 @@ __Z_INLINE parser_error_t _readMethod_subaccounts_transfer_from_subaccount_V1(
         parser_context_t* c, pd_subaccounts_transfer_from_subaccount_V1_t* m)
 {
     CHECK_ERROR(_readSubAccount_V1(c, &m->subAccType));
-    CHECK_ERROR(_readCurrency(c, &m->currency));
+    CHECK_ERROR(_readAsset(c, &m->asset));
     CHECK_ERROR(_readBalance(c, &m->amount))
     return parser_ok;
 }
@@ -196,10 +196,10 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
 
     switch (callPrivIdx) {
 
-    case 2304: /* module 9 call 0 */ // EqBalances:transfer(currency, to, amount)
+    case 2304: /* module 9 call 0 */ // EqBalances:transfer(asset, to, amount)
         switch (itemIdx) {
             case 0:
-                return STR_IT_currency;
+                return STR_IT_asset;
             case 1:
                 return STR_IT_to;
             case 2:
@@ -207,13 +207,13 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             default:
                 return NULL;
         }
-    case 6400: /* module 25 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Currency, amount)
-    case 6401: /* module 25 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Currency, amount)
+    case 6400: /* module 25 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Asset, amount)
+    case 6401: /* module 25 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Asset, amount)
         switch (itemIdx) {
             case 0:
                 return STR_IT_subaccount;
             case 1:
-                return STR_IT_currency;
+                return STR_IT_asset;
             case 2:
                 return STR_IT_value;
             default:
@@ -243,11 +243,11 @@ parser_error_t _getMethod_ItemValue_V1(
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
-        case 2304: /* module 9 call 0 */ // EqBalances:transfer(currency, to, amount)
+        case 2304: /* module 9 call 0 */ // EqBalances:transfer(asset, to, amount)
         switch (itemIdx) {
             case 0: /* utility_batch_V1 - calls */;
-                return _toStringCurrency_V1(
-                        &m->basic.eqbalances_transfer_V1.currency,
+                return _toStringAsset_V1(
+                        &m->basic.eqbalances_transfer_V1.asset,
                         outValue, outValueLen,
                         pageIdx, pageCount);
             case 1:
@@ -256,16 +256,16 @@ parser_error_t _getMethod_ItemValue_V1(
                         outValue, outValueLen,
                         pageIdx, pageCount);
             case 2:
-                return _toStringBalanceCurrency_V1(
+                return _toStringBalanceAsset_V1(
                         &m->basic.eqbalances_transfer_V1.amount,
-                        &m->basic.eqbalances_transfer_V1.currency,
+                        &m->basic.eqbalances_transfer_V1.asset,
                         outValue, outValueLen,
                         pageIdx, pageCount);
             default:
                 return parser_no_data;
         }
-        case 6400: /* module 25 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Currency, amount)
-        case 6401: /* module 25 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Currency, amount)
+        case 6400: /* module 25 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Asset, amount)
+        case 6401: /* module 25 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Asset, amount)
             switch (itemIdx) {
                 case 0: /* utility_batch_V1 - calls */;
                     return _toStringSubaccount_V1(
@@ -273,14 +273,14 @@ parser_error_t _getMethod_ItemValue_V1(
                             outValue, outValueLen,
                             pageIdx, pageCount);
                 case 1:
-                    return _toStringCurrency_V1(
-                            &m->basic.subaccounts_transfer_to_subaccount_V1.currency,
+                    return _toStringAsset_V1(
+                            &m->basic.subaccounts_transfer_to_subaccount_V1.asset,
                             outValue, outValueLen,
                             pageIdx, pageCount);
                 case 2:
-                    return _toStringBalanceCurrency_V1(
+                    return _toStringBalanceAsset_V1(
                             &m->basic.subaccounts_transfer_to_subaccount_V1.amount,
-                            &m->basic.subaccounts_transfer_to_subaccount_V1.currency,
+                            &m->basic.subaccounts_transfer_to_subaccount_V1.asset,
                             outValue, outValueLen,
                             pageIdx, pageCount);
                 default:
