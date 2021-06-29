@@ -90,8 +90,8 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Max nested calls reached";
         case parser_tx_call_vec_too_large:
             return "Call vector exceeds limit";
-        case parser_asset_not_supported:
-            return "Asset not supported";
+        case parser_empty_asset_name:
+            return "Empty asset name";
         case parser_subaccount_not_supported:
             return "Subaccount not supported";
         default:
@@ -128,20 +128,23 @@ parser_error_t _readBool(parser_context_t *c, pd_bool_t *v) {
 
 parser_error_t _readAsset(parser_context_t *c, eq_Asset_t *v){
     CHECK_INPUT();
-    const uint64_t asset = *(uint64_t*)(c->buffer + c->offset);
-    switch (asset) {
-        case 7697252: *v = Usd; break;
-        case 6452323: *v = Btc; break;
-        case 6648936: *v = Eth; break;
-        case 6582132: *v = Dot; break;
-        case 6517366: *v = Crv; break;
-        case 6647667: *v = Eos; break;
-        case 25969  : *v =  Eq; break;
-        case 1734700659: *v = Gens; break;
-        default: *v = Unknown; return parser_asset_not_supported;
+    const char* asset = (char*)(c->buffer + c->offset);
+    int idx = 0;
+    MEMSET(*v, 0, ASSET_MAX_LEN);
+    for (int i = ASSET_MAX_LEN-1; i >= 0; i--){
+        if (asset[i] == 0) {
+            if (i == 0){
+                return parser_empty_asset_name;
+            }
+            continue;
+        }
+        if (asset[i] >= 97 && asset[i] <= 122){
+            (*v)[idx++] = asset[i] - 32;
+        }else {
+            (*v)[idx++] = asset[i];
+        }
     }
-
-    CTX_CHECK_AND_ADVANCE(c, 8);
+    CTX_CHECK_AND_ADVANCE(c, ASSET_MAX_LEN);
     return parser_ok;
 }
 

@@ -81,31 +81,31 @@ parser_error_t _readMethod_V1(
 
     switch (callPrivIdx) {
     /// Pallet EqBalances
-    case 2304: /* module 9 call 0 */
+        case 2560: /* module 9 -> 10 call 0 */
         CHECK_ERROR(_readMethod_eqbalances_transfer_V1(c, &method->basic.eqbalances_transfer_V1))
-        break;
+            break;
 
-    /// Pallet Vesting
-    case 5632: /* module 22 call 0 */
+            /// Pallet Vesting
+        case 5888: /* module 22 -> 23 call 0 */
         CHECK_ERROR(_readMethod_vesting_vest_V1(c, &method->basic.vesting_vest_V1))
-        break;
+            break;
 
-    /// Pallet Subaccounts
-    case 6400: /* module 25 call 0 */
+            /// Pallet Subaccounts
+        case 6656: /* module 25 -> 26 call 0 */
         CHECK_ERROR(_readMethod_subaccounts_transfer_to_subaccount_V1(c, &method->basic.subaccounts_transfer_to_subaccount_V1))
-        break;
-    case 6401: /* module 25 call 1 */
+            break;
+        case 6657: /* module 25 -> 26 call 1 */
         CHECK_ERROR(_readMethod_subaccounts_transfer_from_subaccount_V1(c, &method->basic.subaccounts_transfer_from_subaccount_V1))
-        break;
+            break;
 
 
-    /// Pallet EqLockdrop
-    case 8448: /* module 33 call 0 */
+            /// Pallet EqLockdrop
+        case 8192: /* module 33 -> 32 call 0 */
         CHECK_ERROR(_readMethod_eqlockdrop_lock_V1(c, &method->basic.eqlockdrop_lock_V1))
-        break;
-    case 8449: /* module 33 call 1 */
+            break;
+        case 8193: /* module 33 -> 32 call 1 */
         CHECK_ERROR(_readMethod_eqlockdrop_unlock_external_V1(c, &method->basic.eqlockdrop_unlock_external_V1))
-        break;
+            break;
 
 
     default:
@@ -123,13 +123,13 @@ parser_error_t _readMethod_V1(
 const char* _getMethod_ModuleName_V1(uint8_t moduleIdx)
 {
     switch (moduleIdx) {
-    case 9:
+    case 10:
         return STR_MO_EQBALANCES;
-    case 22:
+    case 23:
         return STR_MO_VESTING;
-    case 25:
+    case 26:
         return STR_MO_SUBACCOUNTS;
-    case 33:
+    case 32:
         return STR_MO_EQLOCKDROP;
 
     default:
@@ -144,19 +144,19 @@ const char* _getMethod_Name_V1(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
-    case 2304: /* module 9 call 0 */    // EqBalances:transfer
+    case 2560: /* module 9 -> 10 call 0 */    // EqBalances:transfer
         return STR_ME_TRANSFER;
-    case 5632: /* module 22 call 0 */   // Vesting:vest
+    case 5888: /* module 22 -> 23 call 0 */   // Vesting:vest
         return STR_ME_VEST;
 
-    case 6400: /* module 25 call 0 */
+    case 6656: /* module 25 -> 26 call 0 */
         return STR_ME_TRANSFER_TO_SUBACCOUNT;     // Subaccounts:transfer_to_subaccount
-    case 6401: /* module 25 call 1 */
+    case 6657: /* module 25 -> 26 call 1 */
         return STR_ME_TRANSFER_FROM_SUBACCOUNT;   // Subaccounts:transfer_from_subaccount
 
-    case 8448: /* module 33 call 0 */ // EqLockdrop:lock
+    case 8192: /* module 33 call 0 */ // EqLockdrop:lock
         return STR_ME_LOCK;
-    case 8449: /* module 33 call 1 */ // EqLockdrop:unlock_external
+    case 8193: /* module 33 call 1 */ // EqLockdrop:unlock_external
         return STR_ME_UNLOCK_EXTERNAL;
 
     default:
@@ -171,17 +171,17 @@ uint8_t _getMethod_NumItems_V1(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
-    case 2304: /* module 9 call 0 */ // EqBalances:transfer
+    case 2560: /* module 9 -> 10 call 0 */ // EqBalances:transfer
         return 3;
-    case 5632: /* module 22 call 0 */ // EqVesting:vest
+    case 5888: /* module 22 -> 23 call 0 */ // EqVesting:vest
         return 0;
-    case 6400: /* module 25 call 0 */ // EqSubaccounts:transfer_to_subaccount
+    case 6656: /* module 25 -> 26 call 0 */ // EqSubaccounts:transfer_to_subaccount
         return 3;
-    case 6401: /* module 25 call 1 */ // EqSubaccounts:transfer_from_subaccount
+    case 6657: /* module 25 -> 26 call 1 */ // EqSubaccounts:transfer_from_subaccount
         return 3;
-    case 8448: /* module 33 call 0 */ // EqLockdrop:lock
+    case 8192: /* module 33 -> 32 call 0 */ // EqLockdrop:lock
         return 1;
-    case 8449: /* module 33 call 0 */ // EqLockdrop:unlock_external
+    case 8193: /* module 33 -> 32 call 0 */ // EqLockdrop:unlock_external
         return 0;
     default:
         return 0;
@@ -196,7 +196,7 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
 
     switch (callPrivIdx) {
 
-    case 2304: /* module 9 call 0 */ // EqBalances:transfer(asset, to, amount)
+    case 2560: /* module 9 -> 10 call 0 */ // EqBalances:transfer(asset, to, amount)
         switch (itemIdx) {
             case 0:
                 return STR_IT_asset;
@@ -207,8 +207,8 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             default:
                 return NULL;
         }
-    case 6400: /* module 25 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Asset, amount)
-    case 6401: /* module 25 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Asset, amount)
+    case 6656: /* module 25 -> 26 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Asset, amount)
+    case 6657: /* module 25 -> 26 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Asset, amount)
         switch (itemIdx) {
             case 0:
                 return STR_IT_subaccount;
@@ -219,7 +219,7 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             default:
                 return NULL;
         }
-    case 8448: /* module 33 call 0 */ // EqLockdrop:lock(amount)
+    case 8192: /* module 33 -> 32 call 0 */ // EqLockdrop:lock(amount)
         switch (itemIdx)
         {
         case 0:
@@ -243,7 +243,7 @@ parser_error_t _getMethod_ItemValue_V1(
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
-        case 2304: /* module 9 call 0 */ // EqBalances:transfer(asset, to, amount)
+        case 2560: /* module 9 -> 10 call 0 */ // EqBalances:transfer(asset, to, amount)
         switch (itemIdx) {
             case 0: /* utility_batch_V1 - calls */;
                 return _toStringAsset_V1(
@@ -264,8 +264,8 @@ parser_error_t _getMethod_ItemValue_V1(
             default:
                 return parser_no_data;
         }
-        case 6400: /* module 25 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Asset, amount)
-        case 6401: /* module 25 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Asset, amount)
+        case 6656: /* module 25 -> 26 call 0 */ // Subaccounts:transfer_to_subaccount  (SubAccType, Asset, amount)
+        case 6657: /* module 25 -> 26 call 1 */ // Subaccounts:transfer_from_subaccount(SubAccType, Asset, amount)
             switch (itemIdx) {
                 case 0: /* utility_batch_V1 - calls */;
                     return _toStringSubaccount_V1(
@@ -286,7 +286,7 @@ parser_error_t _getMethod_ItemValue_V1(
                 default:
                     return parser_no_data;
             }
-    case 8448: /* module 33 call 0 */ // EqLockdrop:lock(amount)
+    case 8192: /* module 33 -> 32 call 0 */ // EqLockdrop:lock(amount)
         switch (itemIdx)
         {
         case 0 /* eqlockdrop_lock_V1 */:
@@ -314,10 +314,10 @@ bool _getMethod_IsNestingSupported_V1(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
-    case 2304: // EQBalances:transfer
-    case 5632: // EQVesting:vest
-    case 8448: // EQLockdrop:Lock
-    case 8449: // EQLockdrop:Unlock external
+    case 2560: // EQBalances:transfer
+    case 5888: // EQVesting:vest
+    case 8192: // EQLockdrop:Lock
+    case 8193: // EQLockdrop:Unlock external
         return false;
     default:
         return true;

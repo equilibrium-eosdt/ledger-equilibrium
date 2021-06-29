@@ -23,29 +23,6 @@
 #include <stdint.h>
 #include <zxmacros.h>
 
-static const char* ASSET_USD = "USD";
-static const char* ASSET_EQ  = "EQ" ;
-static const char* ASSET_ETH = "ETH";
-static const char* ASSET_BTC = "BTC";
-static const char* ASSET_EOS = "EOS";
-static const char* ASSET_DOT = "DOT";
-static const char* ASSET_CRV = "CRV";
-static const char* ASSET_GENS = "GENS";
-static const char* ASSET_ERR = "ERROR";
-
-const char* to_string_asset(eq_Asset_t c){
-    switch (c){
-        case Usd: return ASSET_USD;
-        case Eq:  return ASSET_EQ;
-        case Eth: return ASSET_ETH;
-        case Btc: return ASSET_BTC;
-        case Eos: return ASSET_EOS;
-        case Dot: return ASSET_DOT;
-        case Crv: return ASSET_CRV;
-        case Gens: return ASSET_GENS;
-        default:  return ASSET_ERR;
-    }
-}
 
 parser_error_t _readCompactActiveIndex_V1(parser_context_t* c, pd_CompactActiveIndex_V1_t* v)
 {
@@ -2214,15 +2191,14 @@ parser_error_t _toStringBalanceAsset_V1(
     }
 
     number_inplace_trimming(bufferUI, 1);
-    size_t token_name_size = strlen(to_string_asset(*c));
+    size_t token_name_size = strlen(*c);
     size_t size = strlen(bufferUI) + token_name_size + 2;
     char _tmpBuffer[200];
     MEMZERO(_tmpBuffer, sizeof(_tmpBuffer));
-    parser_error_t err = _toStringAsset(c, _tmpBuffer, 10);
+    parser_error_t err = _toStringAsset(c, _tmpBuffer, ASSET_MAX_LEN);
     if (err != parser_ok){
         return err;
     }
-    //strcat(_tmpBuffer, COIN_TICKER);
     strcat(_tmpBuffer, " ");
     strcat(_tmpBuffer, bufferUI);
     // print length: strlen(value) + strlen(COIN_TICKER) + strlen(" ") + nullChar
@@ -2254,34 +2230,14 @@ parser_error_t _toStringAsset(
     if (v == NULL) {
         return parser_no_data;
     }
-    switch (*v) {
-        case Usd:
-            snprintf(outValue, outValueLen, "%s", ASSET_USD);
-            break;
-        case Eq:
-            snprintf(outValue, outValueLen, "%s", ASSET_EQ);
-            break;
-        case Eth:
-            snprintf(outValue, outValueLen, "%s", ASSET_ETH);
-            break;
-        case Btc:
-            snprintf(outValue, outValueLen, "%s", ASSET_BTC);
-            break;
-        case Eos:
-            snprintf(outValue, outValueLen, "%s", ASSET_EOS);
-            break;
-        case Dot:
-            snprintf(outValue, outValueLen, "%s", ASSET_DOT);
-            break;
-        case Crv:
-            snprintf(outValue, outValueLen, "%s", ASSET_CRV);
-            break;
-        case Gens:
-            snprintf(outValue, outValueLen, "%s", ASSET_GENS);
-            break;
-        default:
-            return parser_asset_not_supported;
+    for (int i = 0; i < ASSET_MAX_LEN; i++){
+        if ((*v)[i] == 0 && i == 0){
+            return parser_empty_asset_name;
+        }
+
+        outValue[i] = (*v)[i];
     }
+
     return parser_ok;
 }
 

@@ -53,7 +53,7 @@ typedef enum {
     parser_tx_nesting_limit_reached,
     parser_tx_call_vec_too_large,
     // Equilibrium specific
-    parser_asset_not_supported,
+    parser_empty_asset_name,
     parser_subaccount_not_supported
 } parser_error_t;
 

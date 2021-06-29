@@ -45,19 +45,9 @@ typedef uint64_t pd_BlockNumber_t;
             return err;                 \
     }
 
-enum EqAsset {
-    Unknown = 0,
-    Usd = 1,
-    Eq = 2,
-    Eth = 3,
-    Btc = 4,
-    Eos = 5,
-    Dot = 6,
-    Crv = 7,
-    Gens = 8
-};
+#define ASSET_MAX_LEN 8
 
-typedef enum EqAsset eq_Asset_t;
+typedef char eq_Asset_t[ASSET_MAX_LEN];
 
 /// Types of subaccounts. Every master account can have
 /// only one subaccount of each type
