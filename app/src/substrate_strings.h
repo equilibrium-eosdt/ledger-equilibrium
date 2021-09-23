@@ -24,6 +24,7 @@ static const char* STR_MO_EQBALANCES = "EqBalances";
 static const char* STR_MO_VESTING = "Vesting";
 static const char* STR_MO_SUBACCOUNTS = "Subaccounts";
 static const char* STR_MO_EQLOCKDROP = "EqLockdrop";
+static const char* STR_MO_EQBRIDGE = "EqBridge";
 
 // Methods names
 static const char* STR_ME_LOCK = "Lock";
@@ -32,6 +33,7 @@ static const char* STR_ME_VEST = "Vest";
 static const char* STR_ME_TRANSFER = "Transfer";
 static const char* STR_ME_TRANSFER_TO_SUBACCOUNT = "Transfer to subaccount";
 static const char* STR_ME_TRANSFER_FROM_SUBACCOUNT = "Transfer from subaccount";
+static const char* STR_ME_TRANSFER_NATIVE = "Transfer native";
 // Items names
 static const char* STR_IT__ratio = "Ratio";
 static const char* STR_IT__remark = "Remark";
@@ -205,6 +207,8 @@ static const char* STR_IT_assets = "Assets";
 static const char* STR_IT_dest_weight = "Dest weight";
 static const char* STR_IT_asset = "Asset";
 static const char* STR_IT_subaccount = "Subaccount";
+static const char* STR_IT_chain_id = "ChainId";
+static const char* STR_IT_resource_id = "ResourceId";
 #ifdef __cplusplus
 }
 #endif

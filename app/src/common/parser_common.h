@@ -54,7 +54,9 @@ typedef enum {
     parser_tx_call_vec_too_large,
     // Equilibrium specific
     parser_empty_asset_name,
-    parser_subaccount_not_supported
+    parser_subaccount_out_of_range,
+    parser_chain_id_out_of_range,
+    resource_id_unexpected_value
 } parser_error_t;
 
 typedef struct {

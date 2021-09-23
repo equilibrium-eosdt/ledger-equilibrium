@@ -63,6 +63,15 @@ enum Subaccount {
 
 typedef enum Subaccount eq_Subaccount_t;
 
+/// Types of chains. Used in withdraw with bridge
+enum ChainId {
+    Ethereum = 0,
+    Substrate = 1,
+    BSC = 2,
+    CHAIN_ID_MAX
+};
+
+typedef enum ChainId eq_ChainId_t;
 
 typedef struct {
     uint8_t moduleIdx;

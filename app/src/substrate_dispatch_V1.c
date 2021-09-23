@@ -55,6 +55,16 @@ __Z_INLINE parser_error_t _readMethod_subaccounts_transfer_from_subaccount_V1(
     return parser_ok;
 }
 
+/// Pallet EqBridge
+__Z_INLINE parser_error_t  _readMethod_eqbridge_transfer_native_V1(
+        parser_context_t* c, pd_eqbridge_transfer_native_V1_t* m)
+{
+    CHECK_ERROR(_readBalance(c, &m->amount))
+    CHECK_ERROR(_readBytes(c, &m->recipient))
+    CHECK_ERROR(_readChainId_V1(c, &m->chainId));
+    CHECK_ERROR(_readu8_array_32_V1(c, &m->resourceId))
+    return parser_ok;
+}
 
 /// Pallet EqLockdrop
 __Z_INLINE parser_error_t _readMethod_eqlockdrop_lock_V1(
@@ -98,7 +108,10 @@ parser_error_t _readMethod_V1(
         CHECK_ERROR(_readMethod_subaccounts_transfer_from_subaccount_V1(c, &method->basic.subaccounts_transfer_from_subaccount_V1))
             break;
 
-
+            /// Pallet EqBridge
+        case 6912: /* module 27 call 0 */
+        CHECK_ERROR(_readMethod_eqbridge_transfer_native_V1(c, &method->basic.eqbridge_transfer_native_V1))
+            break;
             /// Pallet EqLockdrop
         case 8192: /* module 33 -> 32 call 0 */
         CHECK_ERROR(_readMethod_eqlockdrop_lock_V1(c, &method->basic.eqlockdrop_lock_V1))
@@ -129,6 +142,8 @@ const char* _getMethod_ModuleName_V1(uint8_t moduleIdx)
         return STR_MO_VESTING;
     case 24:
         return STR_MO_SUBACCOUNTS;
+    case 27:
+        return STR_MO_EQBRIDGE;
     case 32:
         return STR_MO_EQLOCKDROP;
 
@@ -153,6 +168,9 @@ const char* _getMethod_Name_V1(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_TRANSFER_TO_SUBACCOUNT;     // Subaccounts:transfer_to_subaccount
     case 6145: /* module 24 call 1 */
         return STR_ME_TRANSFER_FROM_SUBACCOUNT;   // Subaccounts:transfer_from_subaccount
+
+    case 6912: /* module 27 call 0 */
+        return STR_ME_TRANSFER_NATIVE; // EqBridge:transfer_native
 
     case 8192: /* module 33 call 0 */ // EqLockdrop:lock
         return STR_ME_LOCK;
@@ -179,6 +197,8 @@ uint8_t _getMethod_NumItems_V1(uint8_t moduleIdx, uint8_t callIdx)
         return 3;
     case 6145: /* module 24 call 1 */ // Subaccounts:transfer_from_subaccount
         return 3;
+    case 6912: /* module 27 call 0 */ // EqBridge:transfer_native
+        return 4;
     case 8192: /* module 33 -> 32 call 0 */ // EqLockdrop:lock
         return 1;
     case 8193: /* module 33 -> 32 call 0 */ // EqLockdrop:unlock_external
@@ -218,6 +238,19 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
                 return STR_IT_value;
             default:
                 return NULL;
+        }
+    case 6912: /* module 27 call 0 */ // EqBridge:transfer_native(amount, recipient, chainId, resourceId)
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_amount;
+        case 1:
+            return STR_IT_recipient;
+        case 2:
+            return STR_IT_chain_id;
+        case 3:
+            return STR_IT_asset;
+        default:
+            return NULL;
         }
     case 8192: /* module 33 -> 32 call 0 */ // EqLockdrop:lock(amount)
         switch (itemIdx)
@@ -286,19 +319,43 @@ parser_error_t _getMethod_ItemValue_V1(
                 default:
                     return parser_no_data;
             }
-    case 8192: /* module 33 -> 32 call 0 */ // EqLockdrop:lock(amount)
-        switch (itemIdx)
-        {
-        case 0 /* eqlockdrop_lock_V1 */:
-            return _toStringBalance(
-                &m->basic.eqlockdrop_lock_V1.amount,
-                outValue, outValueLen,
-                pageIdx, pageCount);
+        case 6912: /* module 27 call 0 */ // EqBridge:transfer_native(amount, recipient, chainId, resourceId)
+            switch (itemIdx) {
+                case 0:
+                    return _toStringAmount(
+                        &m->basic.eqbridge_transfer_native_V1.amount,
+                        outValue, outValueLen,
+                        pageIdx, pageCount);
+                case 1:
+                    return _toStringBytes(
+                            &m->basic.eqbridge_transfer_native_V1.recipient,
+                            outValue, outValueLen,
+                            pageIdx, pageCount);
+                case 2:
+                    return _toStringChainId_V1(
+                                &m->basic.eqbridge_transfer_native_V1.chainId,
+                                outValue, outValueLen,
+                                pageIdx, pageCount);
+                case 3:
+                    return _toStringResourceId_V1(
+                            &m->basic.eqbridge_transfer_native_V1.resourceId,
+                            outValue, outValueLen,
+                            pageIdx, pageCount);
+                default:
+                    return parser_no_data;
+            }
+        case 8192: /* module 33 -> 32 call 0 */ // EqLockdrop:lock(amount)
+            switch (itemIdx) {
+                case 0 /* eqlockdrop_lock_V1 */:
+                    return _toStringBalance(
+                    &m->basic.eqlockdrop_lock_V1.amount,
+                    outValue, outValueLen,
+                    pageIdx, pageCount);
+                default:
+                    return parser_no_data;
+            }
         default:
-            return parser_no_data;
-        }
-    default:
-        return parser_ok;
+            return parser_ok;
     }
 
     return parser_ok;
@@ -314,10 +371,10 @@ bool _getMethod_IsNestingSupported_V1(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
-    case 3328: // EQBalances:transfer
+    case 3328: // EqBalances:transfer
     case 5632: // Vesting:vest
-    case 8192: // EQLockdrop:Lock
-    case 8193: // EQLockdrop:Unlock external
+    case 8192: // EqLockdrop:Lock
+    case 8193: // EqLockdrop:Unlock external
         return false;
     default:
         return true;

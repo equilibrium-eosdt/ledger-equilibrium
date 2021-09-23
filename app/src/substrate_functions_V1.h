@@ -119,6 +119,7 @@ parser_error_t _readXcm_V1(parser_context_t* c, pd_Xcm_V1_t* v);
 parser_error_t _readu8_array_32_V1(parser_context_t* c, pd_u8_array_32_V1_t* v);
 
 parser_error_t _readSubAccount_V1(parser_context_t* c, eq_Subaccount_t* v);
+parser_error_t _readChainId_V1(parser_context_t* c, eq_ChainId_t* v);
 
 // toString functions
 parser_error_t _toStringAccountId_V1(
@@ -779,6 +780,30 @@ parser_error_t _toStringSubaccount_V1(
 
 parser_error_t _toStringSubaccount(
         const eq_Subaccount_t* v,
+        char* outValue,
+        uint16_t outValueLen);
+
+parser_error_t _toStringChainId_V1(
+        const eq_ChainId_t* v,
+        char* outValue,
+        uint16_t outValueLen,
+        uint8_t pageIdx,
+        uint8_t* pageCount);
+
+parser_error_t _toStringChainId(
+        const eq_ChainId_t * v,
+        char* outValue,
+        uint16_t outValueLen);
+
+parser_error_t _toStringResourceId_V1(
+        const pd_u8_array_32_V1_t* v,
+        char* outValue,
+        uint16_t outValueLen,
+        uint8_t pageIdx,
+        uint8_t* pageCount);
+
+parser_error_t _toStringResourceId(
+        const pd_u8_array_32_V1_t * v,
         char* outValue,
         uint16_t outValueLen);
 

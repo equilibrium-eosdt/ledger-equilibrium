@@ -92,8 +92,12 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Call vector exceeds limit";
         case parser_empty_asset_name:
             return "Empty asset name";
-        case parser_subaccount_not_supported:
-            return "Subaccount not supported";
+        case parser_subaccount_out_of_range:
+            return "Subaccount out of range";
+        case parser_chain_id_out_of_range:
+            return "ChainId out of range";
+        case resource_id_unexpected_value:
+            return "ResourceId unexpected value";
         default:
             return "Unrecognized error code";
     }
