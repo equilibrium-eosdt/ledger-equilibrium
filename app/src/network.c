@@ -8,7 +8,7 @@
 
 static const char* NETWORK_EQ = "EQ";
 static const char* NETWORK_DOT = "DOT";
-static const char* GENESIS_EQ    = "6f1a800de3daff7f5e037ddf66ab22ce03ab91874debeddb1086f5f7dbd48925";
+static const char* GENESIS_EQ    = "433f06f06bf95de6302cd4c2f41cb86dfa6eefd70bda1e0c8ddc59823e365a06";
 static const char* GENESIS_DOT   = "91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3";
 
 static const char* NETWORK_ERROR = "ERROR";
