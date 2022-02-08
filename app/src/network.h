@@ -2,8 +2,8 @@
 // Created by overseven on 21.06.2021.
 //
 
-#ifndef LEDGER_KUSAMA_NETWORK_H
-#define LEDGER_KUSAMA_NETWORK_H
+#ifndef LEDGER_EQUILIBRIUM_NETWORK_H
+#define LEDGER_EQUILIBRIUM_NETWORK_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,4 +27,4 @@ uint8_t get_network_address_type(uint8_t id);
 }
 #endif
 
-#endif //LEDGER_KUSAMA_NETWORK_H
+#endif //LEDGER_EQUILIBRIUM_NETWORK_H

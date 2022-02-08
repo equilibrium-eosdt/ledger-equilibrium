@@ -1,4 +1,4 @@
-# Kusama App
+# Equilibrium App
 
 ## General structure
 
