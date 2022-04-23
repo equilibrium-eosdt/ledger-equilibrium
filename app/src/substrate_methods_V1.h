@@ -26,10 +26,24 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
+#define PD_CALL_SYSTEM_V1           0  // default pallet
+#define PD_CALL_UTILITY_V1          1  // default pallet
 #define PD_CALL_EQBALANCES_V1       9  // EQ Pallet
 #define PD_CALL_VESTING_V1          22 // EQ Pallet
 #define PD_CALL_SUBACCOUNTS_V1      25 // EQ Pallet
 #define PD_CALL_EQLOCKDROP_V1       33 // EQ Pallet
+
+/// Pallet System
+#define PD_CALL_SYSTEM_REMARK_V1 1
+typedef struct {
+    pd_Bytes_t remark;
+} pd_system_remark_V1_t;
+
+/// Pallet Utility
+#define PD_CALL_UTILITY_BATCH_V1 0
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_V1_t;
 
 /// Pallet EqBalances
 #define PD_CALL_EQBALANCES_TRANSFER_V1 0
@@ -70,16 +84,17 @@ typedef struct {
 } pd_eqlockdrop_unlock_external_V1_t;
 
 typedef union {
+} pd_MethodBasic_V1_t;
+
+typedef union {
+    pd_system_remark_V1_t system_remark_V1;
+    pd_utility_batch_V1_t utility_batch_V1;
     pd_eqlockdrop_lock_V1_t eqlockdrop_lock_V1;
     pd_eqlockdrop_unlock_external_V1_t eqlockdrop_unlock_external_V1;
     pd_vesting_vest_V1_t vesting_vest_V1;
     pd_eqbalances_transfer_V1_t eqbalances_transfer_V1;
     pd_subaccounts_transfer_to_subaccount_V1_t subaccounts_transfer_to_subaccount_V1;
     pd_subaccounts_transfer_from_subaccount_V1_t subaccounts_transfer_from_subaccount_V1;
-} pd_MethodBasic_V1_t;
-
-
-typedef union {
 } pd_MethodNested_V1_t;
 
 typedef union {

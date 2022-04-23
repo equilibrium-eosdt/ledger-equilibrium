@@ -19,6 +19,22 @@
 #include "zxmacros.h"
 #include <stdint.h>
 
+/// Pallet System
+__Z_INLINE parser_error_t _readMethod_system_remark_V1(
+    parser_context_t* c, pd_system_remark_V1_t* m)
+{
+    CHECK_ERROR(_readBytes(c, &m->remark));
+    return parser_ok;
+}
+
+/// Pallet Utility
+__Z_INLINE parser_error_t _readMethod_utility_batch_V1(
+    parser_context_t* c, pd_utility_batch_V1_t* m)
+{
+    CHECK_ERROR(_readVecCall(c, &m->calls))
+    return parser_ok;
+}
+
 /// Pallet EqBalances
 __Z_INLINE parser_error_t _readMethod_eqbalances_transfer_V1(
     parser_context_t* c, pd_eqbalances_transfer_V1_t* m)
@@ -80,31 +96,39 @@ parser_error_t _readMethod_V1(
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    /// Pallet System
+    case 1: /* module 0 call 1 */
+        CHECK_ERROR(_readMethod_system_remark_V1(c, &method->nested.eqbalances_transfer_V1))
+        break;
+    /// Pallet Utility
+    case 256: /* module 1 call 0 */
+        CHECK_ERROR(_readMethod_utility_batch_V1(c, &method->nested.eqbalances_transfer_V1))
+        break;
     /// Pallet EqBalances
     case 2304: /* module 9 call 0 */
-        CHECK_ERROR(_readMethod_eqbalances_transfer_V1(c, &method->basic.eqbalances_transfer_V1))
+        CHECK_ERROR(_readMethod_eqbalances_transfer_V1(c, &method->nested.eqbalances_transfer_V1))
         break;
 
     /// Pallet Vesting
     case 5632: /* module 22 call 0 */
-        CHECK_ERROR(_readMethod_vesting_vest_V1(c, &method->basic.vesting_vest_V1))
+        CHECK_ERROR(_readMethod_vesting_vest_V1(c, &method->nested.vesting_vest_V1))
         break;
 
     /// Pallet Subaccounts
     case 6400: /* module 25 call 0 */
-        CHECK_ERROR(_readMethod_subaccounts_transfer_to_subaccount_V1(c, &method->basic.subaccounts_transfer_to_subaccount_V1))
+        CHECK_ERROR(_readMethod_subaccounts_transfer_to_subaccount_V1(c, &method->nested.subaccounts_transfer_to_subaccount_V1))
         break;
     case 6401: /* module 25 call 1 */
-        CHECK_ERROR(_readMethod_subaccounts_transfer_from_subaccount_V1(c, &method->basic.subaccounts_transfer_from_subaccount_V1))
+        CHECK_ERROR(_readMethod_subaccounts_transfer_from_subaccount_V1(c, &method->nested.subaccounts_transfer_from_subaccount_V1))
         break;
 
 
     /// Pallet EqLockdrop
     case 8448: /* module 33 call 0 */
-        CHECK_ERROR(_readMethod_eqlockdrop_lock_V1(c, &method->basic.eqlockdrop_lock_V1))
+        CHECK_ERROR(_readMethod_eqlockdrop_lock_V1(c, &method->nested.eqlockdrop_lock_V1))
         break;
     case 8449: /* module 33 call 1 */
-        CHECK_ERROR(_readMethod_eqlockdrop_unlock_external_V1(c, &method->basic.eqlockdrop_unlock_external_V1))
+        CHECK_ERROR(_readMethod_eqlockdrop_unlock_external_V1(c, &method->nested.eqlockdrop_unlock_external_V1))
         break;
 
 
@@ -123,6 +147,10 @@ parser_error_t _readMethod_V1(
 const char* _getMethod_ModuleName_V1(uint8_t moduleIdx)
 {
     switch (moduleIdx) {
+    case 0:
+        return STR_MO_SYSTEM;
+    case 1:
+        return STR_MO_UTILITY;
     case 9:
         return STR_MO_EQBALANCES;
     case 22:
@@ -144,6 +172,10 @@ const char* _getMethod_Name_V1(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1: /* module 0 call 1 */
+        return STR_ME_REMARK;
+    case 256: /* module 1 call 0 */
+        return STR_ME_BATCH;
     case 2304: /* module 9 call 0 */    // EqBalances:transfer
         return STR_ME_TRANSFER;
     case 5632: /* module 22 call 0 */   // Vesting:vest
@@ -171,6 +203,10 @@ uint8_t _getMethod_NumItems_V1(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1: /* module 0 call 1 */ // System:remark
+        return 1;
+    case 256: /* module 1 call 0 */ // Utility:batch
+        return 1;
     case 2304: /* module 9 call 0 */ // EqBalances:transfer
         return 3;
     case 5632: /* module 22 call 0 */ // EqVesting:vest
@@ -195,7 +231,20 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
-
+    case 1: /* module 0 call 1 */ // System:remark
+        switch (itemIdx) {
+            case 0:
+                return STR_IT_remark;
+            default:
+                return NULL;
+        }
+    case 256: /* module 1 call 0 */ // Utility:batch
+        switch (itemIdx) {
+            case 0:
+                return STR_IT_batch;
+            default:
+                return NULL;
+        }
     case 2304: /* module 9 call 0 */ // EqBalances:transfer(currency, to, amount)
         switch (itemIdx) {
             case 0:
@@ -243,22 +292,42 @@ parser_error_t _getMethod_ItemValue_V1(
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+        case 1: /* module 0 call 1 */  // System:remark
+        switch (itemIdx) {
+            case 0:
+                return _toStringBytes(
+                        &m->nested.system_remark_V1.remark,
+                        outValue, outValueLen,
+                        pageIdx, pageCount);
+                default:
+                    return parser_no_data;
+        }
+        case 256: /* module 1 call 0 */ // Utility:batch
+        switch (itemIdx) {
+            case 0:
+                return _toStringVecCall(
+                        &m->nested.utility_batch_V1.calls,
+                        outValue, outValueLen,
+                        pageIdx, pageCount);
+                default:
+                    return parser_no_data;
+        }
         case 2304: /* module 9 call 0 */ // EqBalances:transfer(currency, to, amount)
         switch (itemIdx) {
             case 0: /* utility_batch_V1 - calls */;
                 return _toStringCurrency_V1(
-                        &m->basic.eqbalances_transfer_V1.currency,
+                        &m->nested.eqbalances_transfer_V1.currency,
                         outValue, outValueLen,
                         pageIdx, pageCount);
             case 1:
                 return _toStringAccountId_V1(
-                        &m->basic.eqbalances_transfer_V1.to,
+                        &m->nested.eqbalances_transfer_V1.to,
                         outValue, outValueLen,
                         pageIdx, pageCount);
             case 2:
                 return _toStringBalanceCurrency_V1(
-                        &m->basic.eqbalances_transfer_V1.amount,
-                        &m->basic.eqbalances_transfer_V1.currency,
+                        &m->nested.eqbalances_transfer_V1.amount,
+                        &m->nested.eqbalances_transfer_V1.currency,
                         outValue, outValueLen,
                         pageIdx, pageCount);
             default:
@@ -269,18 +338,18 @@ parser_error_t _getMethod_ItemValue_V1(
             switch (itemIdx) {
                 case 0: /* utility_batch_V1 - calls */;
                     return _toStringSubaccount_V1(
-                            &m->basic.subaccounts_transfer_to_subaccount_V1.subAccType,
+                            &m->nested.subaccounts_transfer_to_subaccount_V1.subAccType,
                             outValue, outValueLen,
                             pageIdx, pageCount);
                 case 1:
                     return _toStringCurrency_V1(
-                            &m->basic.subaccounts_transfer_to_subaccount_V1.currency,
+                            &m->nested.subaccounts_transfer_to_subaccount_V1.currency,
                             outValue, outValueLen,
                             pageIdx, pageCount);
                 case 2:
                     return _toStringBalanceCurrency_V1(
-                            &m->basic.subaccounts_transfer_to_subaccount_V1.amount,
-                            &m->basic.subaccounts_transfer_to_subaccount_V1.currency,
+                            &m->nested.subaccounts_transfer_to_subaccount_V1.amount,
+                            &m->nested.subaccounts_transfer_to_subaccount_V1.currency,
                             outValue, outValueLen,
                             pageIdx, pageCount);
                 default:
@@ -291,7 +360,7 @@ parser_error_t _getMethod_ItemValue_V1(
         {
         case 0 /* eqlockdrop_lock_V1 */:
             return _toStringBalance(
-                &m->basic.eqlockdrop_lock_V1.amount,
+                &m->nested.eqlockdrop_lock_V1.amount,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -309,17 +378,7 @@ bool _getMethod_ItemIsExpert_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t item
     return false;
 }
 
-bool _getMethod_IsNestingSupported_V1(uint8_t moduleIdx, uint8_t callIdx)
+bool _getMethod_IsNestingSupported_V1(uint8_t _moduleIdx, uint8_t _callIdx)
 {
-    uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
-
-    switch (callPrivIdx) {
-    case 2304: // EQBalances:transfer
-    case 5632: // EQVesting:vest
-    case 8448: // EQLockdrop:Lock
-    case 8449: // EQLockdrop:Unlock external
-        return false;
-    default:
-        return true;
-    }
+    return true;
 }
