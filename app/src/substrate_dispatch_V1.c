@@ -19,6 +19,14 @@
 #include "zxmacros.h"
 #include <stdint.h>
 
+/// Pallet System
+__Z_INLINE parser_error_t _readMethod_system_remark_V1(
+        parser_context_t* c, pd_system_remark_V1_t* m)
+{
+    CHECK_ERROR(_readBytes(c, &m->remark));
+    return parser_ok;
+}
+
 /// Pallet EqBalances
 __Z_INLINE parser_error_t _readMethod_eqbalances_transfer_V1(
     parser_context_t* c, pd_eqbalances_transfer_V1_t* m)
